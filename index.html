@@ -90,9 +90,10 @@ button{border:0}
 .boot-lines b{color:var(--cyan)}
 .ok{color:var(--green)}
 .ready{color:var(--cyan)}
-.progress{height:4px;background:#111;margin:30px 0 16px;overflow:hidden}
-.progress span{display:block;width:0;height:100%;background:var(--green);box-shadow:0 0 18px var(--green);animation:load 3.2s ease forwards}
-@keyframes load{to{width:100%}}
+.progress-wrap{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:14px;margin-top:30px}
+.progress{height:6px;background:#111;border:1px solid rgba(0,255,136,.12);border-radius:999px;overflow:hidden;box-shadow:inset 0 0 10px rgba(0,0,0,.35)}
+.progress span{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--green-2),var(--green));box-shadow:0 0 18px rgba(0,255,136,.7);transition:width .08s linear;will-change:width}
+.progress-percent{min-width:48px;text-align:right;color:var(--green);font:700 12px "JetBrains Mono",monospace}
 .boot-hint{font-size:11px;color:#666}
 .boot-hint strong{color:var(--green)}
 
@@ -145,8 +146,7 @@ section{padding:110px 0}
 }
 .profile-card:hover{transform:rotate(0deg) translateY(-6px);box-shadow:0 40px 110px rgba(0,0,0,.45),0 0 70px rgba(0,255,136,.10)}
 .profile-frame{position:relative;overflow:hidden;border-radius:22px;background:#07100c;aspect-ratio:4/5}
-.profile-image{width:100%;height:100%;display:block;object-fit:cover;object-position:50% 22%;filter:saturate(1.04) contrast(1.03);transform:scale(1.002);image-rendering:auto;transition:transform .55s ease,filter .55s ease}
-.profile-card:hover .profile-image{transform:scale(1.018);filter:saturate(1.07) contrast(1.04)}
+.profile-image{width:100%;height:100%;display:block;object-fit:cover;object-position:50% 24%;filter:saturate(1.04) contrast(1.03);transform:scale(1.002)}
 .profile-frame::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,8,5,.74) 100%);pointer-events:none}
 .profile-badge{position:absolute;z-index:2;top:18px;inset-inline-start:18px;display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border:1px solid rgba(255,255,255,.16);border-radius:999px;background:rgba(3,8,6,.58);backdrop-filter:blur(12px);color:#e9fff3;font-size:10px;font-weight:700;letter-spacing:.02em}
 .profile-badge .status-dot{width:7px;height:7px}
@@ -539,6 +539,9 @@ body.light-theme .toast{
     border-color:rgba(20,184,166,.35);
 }
 body.light-theme .orb{opacity:.06}
+body.light-theme .progress{background:#e6eef0;border-color:rgba(15,118,110,.12)}
+body.light-theme .progress span{background:linear-gradient(90deg,#0f766e,#14b8a6);box-shadow:0 0 18px rgba(20,184,166,.35)}
+body.light-theme .progress-percent{color:#0f766e}
 
 
 /* =========================================================
@@ -671,8 +674,6 @@ html[dir="rtl"] .section-head {
     }
 }
 
-.profile-image-fallback{display:grid;place-items:center;min-height:100%;padding:30px;text-align:center;color:var(--muted);font-family:"IBM Plex Sans Arabic",sans-serif}
-
 </style>
 </head>
 
@@ -756,19 +757,13 @@ html[dir="rtl"] .section-head {
             <div class="profile-card">
                 <div class="profile-frame">
                     <img
-                        src="./images/profile.png"
+                        src="./profile(1).png"
                         alt="صورة شخصية للمهندس عبدالله علي السلمي"
                         class="profile-image"
-                        id="profileImage"
-                        width="860"
-                        height="1075"
+                                                id="profileImage"
                         loading="eager"
                         decoding="async"
-                        onerror="this.style.display='none';document.getElementById('profileFallback').hidden=false;"
                     >
-                    <div class="profile-image-fallback" id="profileFallback" hidden>
-                        <span>Profile image unavailable. Please upload <strong>images/profile.png</strong>.</span>
-                    </div>
                     <div class="profile-badge">
                         <span class="status-dot"></span>
                         <span>الملف المهني</span>
@@ -1112,23 +1107,36 @@ let bootClosed = false;
 document.body.classList.add("locked");
 
 /* Professional startup loader: the progress bar completes before the screen can be dismissed. */
+const bootProgressBar = document.getElementById("bootProgress");
 const bootStart = performance.now();
 const bootDuration = 3400;
 function updateBootProgress(now){
     if(!boot || bootClosed) return;
+
     const elapsed = now - bootStart;
-    const progress = Math.min(100, Math.round((elapsed / bootDuration) * 100));
-    if(bootPercent) bootPercent.textContent = `${progress}%`;
+    const progress = Math.min(100, (elapsed / bootDuration) * 100);
+    const roundedProgress = Math.floor(progress);
+
+    if (bootProgressBar) bootProgressBar.style.width = `${progress}%`;
+    if (bootPercent) bootPercent.textContent = `${roundedProgress}%`;
+
     if(progress < 100){
         requestAnimationFrame(updateBootProgress);
-    } else {
-        bootReady = true;
-        boot.classList.add("ready");
-        if(bootHint){
-            bootHint.textContent = document.documentElement.lang === "en" ? "Press any key to continue..." : "اضغط أي زر للمتابعة...";
-        }
-        setTimeout(closeBoot, 650);
+        return;
     }
+
+    if (bootProgressBar) bootProgressBar.style.width = "100%";
+    if (bootPercent) bootPercent.textContent = "100%";
+    bootReady = true;
+    boot.classList.add("ready");
+
+    if(bootHint){
+        bootHint.textContent = document.documentElement.lang === "en"
+            ? "Press any key to continue..."
+            : "اضغط أي زر للمتابعة...";
+    }
+
+    setTimeout(closeBoot, 650);
 }
 
 function closeBoot(){
@@ -1686,13 +1694,6 @@ function updateDocumentMetadata(lang) {
         profileImage.alt = isArabic
             ? "صورة شخصية للمهندس عبدالله علي السلمي"
             : "Professional portrait of Eng. Abdullah Ali Alsulmi";
-    }
-
-    const profileFallback = document.getElementById("profileFallback");
-    if (profileFallback) {
-        profileFallback.innerHTML = isArabic
-            ? "تعذر تحميل الصورة. تأكد من وجود <strong>images/profile.png</strong>."
-            : "Profile image unavailable. Please upload <strong>images/profile.png</strong>.";
     }
 
     if (themeBtn) {
