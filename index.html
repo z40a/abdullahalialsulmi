@@ -134,6 +134,27 @@ section{padding:110px 0}
 .hero{min-height:calc(100vh - 76px);display:grid;place-items:center;padding:75px 0 100px}
 .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:70px}
 .hero-copy{text-align:right}
+
+/* Professional Profile Photo */
+.hero-visual{position:relative;width:100%;max-width:520px;margin-inline:auto;display:flex;flex-direction:column;align-items:center}
+.profile-card{
+    position:relative;width:min(100%,430px);padding:10px;border-radius:30px;
+    background:linear-gradient(145deg,rgba(0,255,136,.20),rgba(0,229,255,.08) 48%,rgba(255,255,255,.025));
+    border:1px solid var(--border-strong);box-shadow:0 35px 100px rgba(0,0,0,.38),0 0 55px rgba(0,255,136,.06);
+    transform:rotate(1deg);transition:transform .45s ease,box-shadow .45s ease
+}
+.profile-card:hover{transform:rotate(0deg) translateY(-6px);box-shadow:0 40px 110px rgba(0,0,0,.45),0 0 70px rgba(0,255,136,.10)}
+.profile-frame{position:relative;overflow:hidden;border-radius:22px;background:#07100c;aspect-ratio:4/5}
+.profile-image{width:100%;height:100%;display:block;object-fit:cover;object-position:50% 24%;filter:saturate(1.04) contrast(1.03);transform:scale(1.002)}
+.profile-frame::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,8,5,.74) 100%);pointer-events:none}
+.profile-badge{position:absolute;z-index:2;top:18px;inset-inline-start:18px;display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border:1px solid rgba(255,255,255,.16);border-radius:999px;background:rgba(3,8,6,.58);backdrop-filter:blur(12px);color:#e9fff3;font-size:10px;font-weight:700;letter-spacing:.02em}
+.profile-badge .status-dot{width:7px;height:7px}
+.profile-caption{position:absolute;z-index:2;inset-inline:20px;bottom:18px;display:flex;align-items:end;justify-content:space-between;gap:12px}
+.profile-name{color:#fff;font-size:19px;font-weight:800;line-height:1.2;text-shadow:0 2px 15px rgba(0,0,0,.45)}
+.profile-role{display:block;color:#b9d9c9;font-size:10px;margin-top:5px;font-weight:500}
+.profile-mark{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;border:1px solid rgba(0,255,136,.28);background:rgba(0,255,136,.08);color:var(--green);font:700 17px "JetBrains Mono",monospace;flex:0 0 auto}
+.profile-card::before{content:"";position:absolute;width:120px;height:120px;top:-40px;right:-35px;border-radius:50%;background:rgba(0,255,136,.12);filter:blur(20px);pointer-events:none}
+.hero-visual .terminal{position:relative;z-index:3;width:min(100%,470px);margin-top:-100px;margin-inline-end:0}
 .hero-badge{
     display:inline-flex;align-items:center;gap:9px;padding:7px 12px;
     border:1px solid var(--border);background:rgba(0,255,136,.035);border-radius:999px;
@@ -272,6 +293,8 @@ footer{border-top:1px solid var(--border);padding:45px 0;background:rgba(0,0,0,.
     .hero-grid,.about-grid{grid-template-columns:1fr}
     .hero-copy{text-align:center}
     .hero-description{margin:auto}
+    .hero-visual{max-width:720px}
+    .profile-card{width:min(100%,440px)}
     .hero-actions,.hero-meta{justify-content:center}
     .terminal{max-width:760px;margin:auto}
     .skills{grid-template-columns:repeat(2,1fr)}
@@ -293,6 +316,9 @@ footer{border-top:1px solid var(--border);padding:45px 0;background:rgba(0,0,0,.
     .brand-text{display:none}
     .hero{min-height:auto;padding-top:75px}
     .hero h1{font-size:clamp(45px,15vw,70px)}
+    .hero-visual{max-width:620px}
+    .profile-card{width:min(100%,420px);transform:none}
+    .hero-visual .terminal{width:100%;margin-top:24px;transform:none}
     .terminal{transform:none}
     .terminal-body{font-size:10px}
     .stats,.skills,.projects,.info-grid,.contact-layout{grid-template-columns:1fr}
@@ -307,6 +333,10 @@ footer{border-top:1px solid var(--border);padding:45px 0;background:rgba(0,0,0,.
     .achievements{grid-template-columns:1fr}
     .hero-actions .btn{width:100%}
     .boot-title{font-size:38px}
+    .boot-sub{font-size:10px}
+    .boot-lines{font-size:10px}
+    .boot-hint{font-size:10px}
+    .progress-wrap{margin-top:24px}
 }
 @media(prefers-reduced-motion:reduce){
     *,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}
@@ -457,6 +487,16 @@ body.light-theme .btn-outline{
     border-color:rgba(15,118,110,.28);
     background:#fff;
 }
+body.light-theme .profile-card{
+    background:linear-gradient(145deg,rgba(15,118,110,.14),rgba(37,99,235,.07) 48%,rgba(255,255,255,.9));
+    border-color:rgba(15,118,110,.24);
+    box-shadow:0 35px 90px rgba(15,23,42,.13),0 0 45px rgba(15,118,110,.06);
+}
+body.light-theme .profile-frame{background:#eaf2ee}
+body.light-theme .profile-badge{background:rgba(15,23,42,.68);border-color:rgba(255,255,255,.18)}
+body.light-theme .profile-role{color:#d8eee4}
+body.light-theme .profile-mark{color:#5eead4;border-color:rgba(94,234,212,.28);background:rgba(15,118,110,.18)}
+
 body.light-theme .terminal{
     background:#0f172a;
     border-color:rgba(15,118,110,.28);
@@ -649,8 +689,14 @@ html[dir="rtl"] .section-head {
             <p><b>[LAB]</b> تجهيز بيئات Cisco / Linux / Windows / VMware... <span class="ok">[OK]</span></p>
             <p><b>[DONE]</b> النظام جاهز لاستعراض الملف الشخصي <span class="ready">[READY]</span></p>
         </div>
-        <div class="progress"><span></span></div>
-        <div class="boot-hint">اضغط أي زر للمتابعة — <strong>م. عبدالله علي السلمي</strong></div>
+        <div class="progress-wrap">
+            <div class="progress" aria-label="Loading progress"><span id="bootProgress"></span></div>
+            <span class="progress-percent" id="bootPercent">0%</span>
+        </div>
+        <div class="boot-hint">
+            <span class="press" id="bootHint">جارٍ تحميل الملف الشخصي...</span>
+            <strong>م. عبدالله علي السلمي</strong>
+        </div>
     </div>
 </div>
 
@@ -703,7 +749,33 @@ html[dir="rtl"] .section-head {
             </div>
         </div>
 
-        <div class="terminal reveal">
+        <div class="hero-visual reveal">
+            <div class="profile-card">
+                <div class="profile-frame">
+                    <img
+                        src="{{ url_for('static', filename='images/profile.png') }}"
+                        alt="صورة شخصية للمهندس عبدالله علي السلمي"
+                        class="profile-image"
+                        onerror="this.onerror=null; this.src='../static/images/profile.png';"
+                        id="profileImage"
+                        loading="eager"
+                        decoding="async"
+                    >
+                    <div class="profile-badge">
+                        <span class="status-dot"></span>
+                        <span>الملف المهني</span>
+                    </div>
+                    <div class="profile-caption">
+                        <div>
+                            <div class="profile-name">م. عبدالله علي السلمي</div>
+                            <span class="profile-role">هندسة الشبكات والأمن السيبراني</span>
+                        </div>
+                        <div class="profile-mark">&gt;_</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="terminal">
             <div class="terminal-bar">
                 <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
                 <span class="terminal-name">profile@abdullah:~</span>
@@ -724,6 +796,7 @@ html[dir="rtl"] .section-head {
                 <div class="terminal-row"><span class="prompt">$</span><span class="white">status --check</span></div>
                 <div><span class="ok">●</span> systems operational <span class="dim">|</span> learning continuously</div>
                 <div><span class="prompt">$</span> <span class="cursor"></span></div>
+            </div>
             </div>
         </div>
     </div>
@@ -1024,17 +1097,43 @@ html[dir="rtl"] .section-head {
 
 <script>
 const boot = document.getElementById("boot");
+const bootPercent = document.getElementById("bootPercent");
+const bootHint = document.getElementById("bootHint");
+let bootReady = false;
+let bootClosed = false;
 document.body.classList.add("locked");
 
-function closeBoot(){
-    if(!boot.classList.contains("hidden")){
-        boot.classList.add("hidden");
-        document.body.classList.remove("locked");
+/* Professional startup loader: the progress bar completes before the screen can be dismissed. */
+const bootStart = performance.now();
+const bootDuration = 3400;
+function updateBootProgress(now){
+    if(!boot || bootClosed) return;
+    const elapsed = now - bootStart;
+    const progress = Math.min(100, Math.round((elapsed / bootDuration) * 100));
+    if(bootPercent) bootPercent.textContent = `${progress}%`;
+    if(progress < 100){
+        requestAnimationFrame(updateBootProgress);
+    } else {
+        bootReady = true;
+        boot.classList.add("ready");
+        if(bootHint){
+            bootHint.textContent = state?.lang === "en" ? "Press any key to continue..." : "اضغط أي زر للمتابعة...";
+        }
+        setTimeout(closeBoot, 650);
     }
 }
-window.addEventListener("keydown", closeBoot, {once:true});
-window.addEventListener("click", closeBoot, {once:true});
-setTimeout(closeBoot, 4200);
+
+function closeBoot(){
+    if(bootClosed || !boot || !bootReady) return;
+    bootClosed = true;
+    boot.classList.add("hidden");
+    document.body.classList.remove("locked");
+}
+
+window.addEventListener("keydown", () => {
+    if(bootReady) closeBoot();
+}, {passive:true});
+requestAnimationFrame(updateBootProgress);
 
 const menuBtn = document.getElementById("menuBtn");
 const navLinks = document.getElementById("navLinks");
@@ -1128,6 +1227,8 @@ const T = {
     "المراجع": "المراجع",
     "تواصل": "تواصل",
     "متاح للفرص المهنية والتعاون التقني": "متاح للفرص المهنية والتعاون التقني",
+    "الملف المهني": "الملف المهني",
+    "هندسة الشبكات والأمن السيبراني": "هندسة الشبكات والأمن السيبراني",
     "عبدالله": "عبدالله",
     "السلمي": "السلمي",
     "مهندس شبكات وأمن سيبراني، مهتم ببناء بنية تحتية آمنة وحلول تقنية عملية.": "مهندس شبكات وأمن سيبراني، مهتم ببناء بنية تحتية آمنة وحلول تقنية عملية.",
@@ -1301,6 +1402,8 @@ const T = {
     "المراجع": "References",
     "تواصل": "Contact",
     "متاح للفرص المهنية والتعاون التقني": "Available for professional opportunities and technical collaboration",
+    "الملف المهني": "Professional Profile",
+    "هندسة الشبكات والأمن السيبراني": "Network Engineering & Cybersecurity",
     "عبدالله": "Abdullah",
     "السلمي": "Alsulmi",
     "مهندس شبكات وأمن سيبراني، مهتم ببناء بنية تحتية آمنة وحلول تقنية عملية.": "Network & Cybersecurity Engineer focused on building secure infrastructure and practical technology solutions.",
@@ -1561,6 +1664,20 @@ function updateDocumentMetadata(lang) {
         langBtn.textContent = isArabic ? "EN" : "ع";
         langBtn.title = isArabic ? "التبديل إلى الإنجليزية" : "Switch to Arabic";
         langBtn.setAttribute("aria-label", isArabic ? "التبديل إلى الإنجليزية" : "Switch to Arabic");
+    }
+
+    const bootHintElement = document.getElementById("bootHint");
+    if (bootHintElement && !bootReady) {
+        bootHintElement.textContent = isArabic ? "جارٍ تحميل الملف الشخصي..." : "Loading professional profile...";
+    } else if (bootHintElement && bootReady) {
+        bootHintElement.textContent = isArabic ? "اضغط أي زر للمتابعة..." : "Press any key to continue...";
+    }
+
+    const profileImage = document.getElementById("profileImage");
+    if (profileImage) {
+        profileImage.alt = isArabic
+            ? "صورة شخصية للمهندس عبدالله علي السلمي"
+            : "Professional portrait of Eng. Abdullah Ali Alsulmi";
     }
 
     if (themeBtn) {
